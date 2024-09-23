@@ -32,7 +32,10 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         public TEntity GetById(int id)
         {
-            throw new NotImplementedException();
+            using(var context = new TContext())
+            {
+                return context.Set<TEntity>().Find(id);
+            }
         }
 
         public void Update(TEntity entity)

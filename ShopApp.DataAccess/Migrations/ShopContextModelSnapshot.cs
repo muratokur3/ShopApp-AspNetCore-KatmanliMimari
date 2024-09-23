@@ -35,7 +35,7 @@ namespace ShopApp.DataAccess.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ShopApp.Entity.Product", b =>
@@ -66,7 +66,7 @@ namespace ShopApp.DataAccess.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ShopApp.Entity.ProductCategory", b =>

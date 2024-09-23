@@ -4,23 +4,35 @@
 *@
 <nav class="navbar bg-primary navbar-dark navbar-expand-sm">
     <div class="container">
-        <ul class="navbar-nav">
+                <a href="/" class="navbar-brand">
+                    ShopApp
+                </a>
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a href="/" class="nav-link">
-                    Anasayfa
+                <a asp-controller="shop" asp-action="list" class="nav-link">
+                    Products
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/Product/List" class="nav-link">
-                    Ürünler
+                <a href="" class="nav-link">
+                    Cart
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/Product/Create" class="nav-link">
-                    Yeni Ürün ekle
+                <a href="" class="nav-link">
+                    Orders
                 </a>
             </li>
-            
+            <li class="nav-item">
+                <a asp-controller="admin" asp-action="createproduct"  class="nav-link">
+                    Add Product
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="admin" asp-action="productlist" class="nav-link">
+                    Product List
+                </a>
+            </li>
         </ul>
 
        

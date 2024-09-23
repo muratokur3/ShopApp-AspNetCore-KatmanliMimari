@@ -11,27 +11,14 @@
 <body>
     <header>
         <partial name="_navbar" />
-        @RenderSection("Header",false)
     </header>
 
     <main role="main" class="pb-3">
         <div class="container mt-4 mb-3">
             <div class="row">
-                @if (IsSectionDefined("Categories"))
-                {
-                    <div class="col-md-3">
-                        @RenderSection("Categories")
-                    </div>
-                    <div class="col-md-9">
-                        @RenderBody()
-                    </div>
-                }
-                else
-                {
                     <div class="col-md-12">
                         @RenderBody()
                     </div>
-                }
             </div>
         </div>
     </main>
@@ -47,4 +34,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script src="https://kit.fontawesome.com/117a0da7a9.js" crossorigin="anonymous"></script>
 </html>

@@ -1,12 +1,17 @@
+using ShopApp.Business.Abstratc;
+using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
-builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
 builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
+
+builder.Services.AddScoped<IProductService, ProductManager>();
+builder.Services.AddScoped<ICategoryService, CategoryManager>();
+
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
@@ -15,9 +20,16 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+   
     app.UseHsts();
+
+    
 }
+if (app.Environment.IsDevelopment())
+    {
+    SeedDatabase.Seed();
+    app.UseDeveloperExceptionPage();
+    }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -25,6 +37,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "Products",
+    pattern: "products/{category?}",
+    defaults: new { controller = "shop", action = "list" });
 
 app.MapControllerRoute(
     name: "default",

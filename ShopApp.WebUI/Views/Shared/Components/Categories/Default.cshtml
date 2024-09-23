@@ -1,7 +1,6 @@
 ﻿@model List<Category>
-
 <div class="list-group">
-    <a asp-controller="Product" asp-action="List" asp-route-id="" class="list-group-item list-group-item-action @(ViewBag.SelectedCategory == null ? "active" : "")">Tüm Kategoriler</a>
+    <a asp-controller="Product" asp-action="List" asp-route-id="" class="list-group-item list-group-item-action">Tüm Kategoriler</a>
     @foreach (var category in @Model)
     {
         <a asp-controller="Product"
