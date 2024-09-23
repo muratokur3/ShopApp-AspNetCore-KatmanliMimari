@@ -1,0 +1,32 @@
+﻿@model Product
+@{
+    // var categories = new SelectList(CategoryRepository.Categories, "CategoryId", "Name");
+}
+<form method="post" class="row g-4">
+    <input asp-for="ProductId" value="@Model.ProductId" hidden />
+    <div class="form-group">
+        <label for="name">Ürün Adı</label>
+        <input asp-for="Name" value="@Model.Name" class="form-control" placeholder="Ürün adını giriniz">
+    </div>
+    <div class="form-group">
+        <label for="price">Ürün Fiyatı</label>
+        <input asp-for="Price" value="@Model.Price" class="form-control" placeholder="Ürün fiyatını giriniz">
+    </div>
+    <div class="form-group">
+        <label for="description">Ürün Açıklaması</label>
+        <textarea class="form-control" asp-for="Description" value="@Model.Description" rows="3"></textarea>
+    </div>
+   @*  <div class="form-group">
+        <label for="categoryid">Kategori</label>
+        <select class="form-control" asp-items="@categories" asp-for="CategoryId">
+            <option selected disabled>Kategori Seçiniz</option>
+
+        </select>
+    </div> *@
+    <div class="form-group">
+        <label for="ImageUrl">Ürün Resmi</label>
+        <input asp-for="ImageUrl" value="@Model.ImageUrl" class="form-control-file">
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+
+</form>

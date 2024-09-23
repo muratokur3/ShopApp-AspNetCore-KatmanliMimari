@@ -1,0 +1,23 @@
+﻿@model ShopApp.WebUI.ViewModels.ProductViewModel
+@{
+    var products = Model.Products;
+}
+@section Header
+{
+    <partial name="_header" />
+}
+        @if (products.Count == 0)
+        {
+            <partial name="_noproduct" />
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var product in @products)
+                {
+                    <div class="col-md-3">
+                        @await Html.PartialAsync("_product", product)
+                    </div>
+                }
+            </div>
+        }

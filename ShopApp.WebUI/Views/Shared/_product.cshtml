@@ -1,0 +1,19 @@
+﻿@model Product
+<div class="card mb-5">
+    <img src="~/Img/@Model.ImageUrl" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title
+                                                                    ">
+            @Model.Name
+        </h5>
+        <p class="card-text">@Model.Description</p>
+        <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-primary">incele</a>
+        <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId" class="btn btn-primary">Düzenle</a>
+
+        <form method="post" action="/product/delete">
+            <input type="hidden" name="ProductId" value="@Model.ProductId"/>
+            <button type="submit" class="btn btn-danger">Sil</button>
+        </form>
+    </div>
+</div>
+
