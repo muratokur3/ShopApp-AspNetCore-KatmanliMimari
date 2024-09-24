@@ -8,7 +8,7 @@
         <h1 class="mb-3">@Model.Product.Name</h1><hr />
         @foreach (var category in Model.Categories)
         {
-            <a href="#" class="btn btn-link p-0 mb-3">@category.Name</a>
+            <a asp-controller="shop" asp-action="list" asp-route-category="@category.Url" class="btn btn-link p-0 mb-3">@category.Name</a>
         }
 
         <div class="mb-3">

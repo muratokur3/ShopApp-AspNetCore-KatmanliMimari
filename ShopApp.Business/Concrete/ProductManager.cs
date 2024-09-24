@@ -2,6 +2,7 @@
 using ShopApp.Business.Abstratc;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.Entity;
+using System;
 
 namespace ShopApp.Business.Concrete
 {
@@ -28,9 +29,9 @@ namespace ShopApp.Business.Concrete
             return _productRepository.GetAll();
         }
 
-        public Product GetProductDetails(int id)
+        public Product GetProductDetails(string url)
         {
-            return _productRepository.GetProductDetails(id);
+            return _productRepository.GetProductDetails(url);
         }
 
         public Product GetById(int id)
@@ -41,6 +42,16 @@ namespace ShopApp.Business.Concrete
         public void Update(Product entity)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Product> GetProductByCategory(string name, int page, int pageSize)
+        {
+            return _productRepository.GetProductByCategory(name,page,pageSize);
+        }
+
+        public int GetCountByCategory(string category)
+        {
+            return _productRepository.GetCountByCategory(category);
         }
     }
 }

@@ -9,11 +9,14 @@ namespace ShopApp.Business.Abstratc
 {
     public interface IProductService
     {
-        Product GetProductDetails(int id);
+        Product GetProductDetails(string url);
+        List<Product> GetProductByCategory(string name, int page, int pageSize);
+
         Product GetById(int id);
         List<Product> GetAll();
         void Create(Product entity);
         void Update(Product entity);
         void Delete(Product entity);
+        int GetCountByCategory(string category);
     }
 }

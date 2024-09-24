@@ -16,6 +16,26 @@
                     @await Html.PartialAsync("_product", product)
                 </div>
             }
+        </div>  <div class="row">
+            <div class="col">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        @for (int i = 0; i < Model.PageInfo.TotalPages(); i++)
+                        {
+                            if (string.IsNullOrEmpty(Model.PageInfo.CurrentCategory))
+                            {
+                                <li class="page-item @(Model.PageInfo.CurrentPage == i + 1 ? "active" : "")"><a class="page-link" href="/products?page=@(i+1)">@(i + 1)</a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item @(Model.PageInfo.CurrentPage == i + 1 ? "active" : "")"><a class="page-link @(Model.PageInfo.CurrentPage==i+1?"active":"")" href="/products/@Model.PageInfo.CurrentCategory?page=@(i+1)">@(i + 1)</a></li>
+                            }
+                        }
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 

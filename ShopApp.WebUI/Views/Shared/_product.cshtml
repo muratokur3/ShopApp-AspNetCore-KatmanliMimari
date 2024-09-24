@@ -1,7 +1,7 @@
 ﻿@model Product
 
 <div class="card mb-5">
-    <img src="~/Img/@Model..ImageUrl" class="card-img-top" alt="...">
+    <img src="~/Img/@Model.ImageUrl" class="card-img-top" alt="...">
     <div class="card-body">
         <h5 class="card-title
                                                                     ">
@@ -11,7 +11,7 @@
             <i class="fas fa-lira-sign"></i> @Model.Price
             </small>
        <div class="card-footer text-center">
-            <a asp-controller="shop" asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-primary">incele</a>
+            <a asp-controller="shop" asp-action="Details" asp-route-url="@Model.Url" class="btn btn-primary">Details</a>
             <a asp-controller="addtocart" asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-primary">Add To Cart</a>
        </div>
     </div>
