@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstratc;
 using ShopApp.DataAccess.Abstract;
-using ShopApp.WebUI.ViewModels;
+using ShopApp.WebUI.Models;
 using System.Diagnostics;
 
 namespace ShopApp.WebUI.Controllers

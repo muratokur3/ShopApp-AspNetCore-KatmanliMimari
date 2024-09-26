@@ -2,7 +2,6 @@
 using ShopApp.Business.Abstratc;
 using ShopApp.Entity;
 using ShopApp.WebUI.Models;
-using ShopApp.WebUI.ViewModels;
 using System;
 
 namespace ShopApp.WebUI.Controllers
@@ -50,6 +49,15 @@ namespace ShopApp.WebUI.Controllers
                 Product = product,
                 Categories = product.ProductCategories.Select(i => i.Category).ToList()
             });
+        }
+
+        public IActionResult Search (string q)
+        {
+            var productViewModel = new ProductListViewModel()
+            {
+                Products = _productService.GetSearchResult(q)
+            };
+            return View(productViewModel);
         }
     }
 }

@@ -38,11 +38,20 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "adminProducts",
+    pattern: "admin/products",
+    defaults: new { controller = "Admin", action = "ProductList" });
 
 app.MapControllerRoute(
     name: "Products",
     pattern: "products/{category?}",
     defaults: new { controller = "shop", action = "list" });
+
+app.MapControllerRoute(
+    name:"search",
+    pattern:"search",
+    defaults: new {controller="shop",action="search"});
 
 app.MapControllerRoute(
     name: "productdetails",

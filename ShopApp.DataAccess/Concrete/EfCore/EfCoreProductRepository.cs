@@ -16,7 +16,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
         {
             using (var context = new ShopContext())
             {
-                var products = context.Products.AsQueryable();
+                var products = context.Products.Where(i=>i.IsApproved).AsQueryable();
                 if (!string.IsNullOrEmpty(category))
                 {
                     products = products
@@ -28,9 +28,12 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public List<Product> GetPopularProducts()
+        public List<Product> GetHomePageProducts()
         {
-            throw new NotImplementedException();
+                using(var context = new ShopContext())
+                {
+                return context.Products.Where(i=>i.IsHome).ToList();
+                }
         }
 
         public List<Product> GetProductByCategory(string name, int page,int pageSize)
@@ -49,7 +52,6 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-       
         public Product GetProductDetails(string url)
         {
              using (var context = new ShopContext())
@@ -60,6 +62,19 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                                 .ThenInclude(i => i.Category)
                                 .FirstOrDefault();
 
+            }
+        }
+
+        public List<Product> GetSearchResult(string searchString)
+        {
+            using(var context = new ShopContext())
+                {
+                var products = context.Products.AsQueryable();
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    products = products.Where(i => i.IsApproved&&(i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())));
+                }
+                return products.ToList();
             }
         }
     }

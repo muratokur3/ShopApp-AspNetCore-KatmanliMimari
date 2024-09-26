@@ -11,7 +11,8 @@ namespace ShopApp.Business.Abstratc
     {
         Product GetProductDetails(string url);
         List<Product> GetProductByCategory(string name, int page, int pageSize);
-
+        List<Product> GetHomePageProducts();
+        List<Product> GetSearchResult(string searchString);
         Product GetById(int id);
         List<Product> GetAll();
         void Create(Product entity);

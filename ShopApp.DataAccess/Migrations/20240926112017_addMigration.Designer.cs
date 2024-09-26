@@ -11,7 +11,7 @@ using ShopApp.DataAccess.Concrete.EfCore;
 namespace ShopApp.DataAccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20240924203954_addMigration")]
+    [Migration("20240926112017_addMigration")]
     partial class addMigration
     {
         /// <inheritdoc />
@@ -62,6 +62,9 @@ namespace ShopApp.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsHome")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
