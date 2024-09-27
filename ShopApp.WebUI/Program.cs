@@ -39,9 +39,14 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "adminProducts",
+    name: "adminProductList",
     pattern: "admin/products",
     defaults: new { controller = "Admin", action = "ProductList" });
+
+app.MapControllerRoute(
+    name: "adminProductEdit",
+    pattern: "admin/products/{id?}",
+    defaults: new { controller = "Admin", action = "EditProduct" });
 
 app.MapControllerRoute(
     name: "Products",

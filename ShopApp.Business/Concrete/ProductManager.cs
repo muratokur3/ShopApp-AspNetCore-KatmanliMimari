@@ -41,7 +41,7 @@ namespace ShopApp.Business.Concrete
 
         public void Update(Product entity)
         {
-            throw new NotImplementedException();
+            _productRepository.Update(entity);
         }
 
         public List<Product> GetProductByCategory(string name, int page, int pageSize)

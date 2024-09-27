@@ -14,12 +14,20 @@ namespace ShopApp.DataAccess.Concrete.EfCore
     {
         public void Create(TEntity entity)
         {
-            throw new NotImplementedException();
+           using(var context = new TContext())
+            {
+                context.Set<TEntity>().Add(entity);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            using(var context = new TContext())
+            {
+                context.Set<TEntity>().Remove(entity);
+                context.SaveChanges();
+            }
         }
 
         public List<TEntity> GetAll()
@@ -40,7 +48,11 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            using(var context = new TContext())
+            {
+                context.Entry(entity).State = EntityState.Modified;
+                context.SaveChanges();
+            }
         }
     }
 }

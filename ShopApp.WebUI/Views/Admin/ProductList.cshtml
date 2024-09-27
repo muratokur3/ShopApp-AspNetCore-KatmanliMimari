@@ -1,6 +1,8 @@
 ﻿@model ProductListViewModel
 
 
+
+
 <div class="row">
     <div class="col-md-12">
         <h1>Admin Products</h1>
@@ -19,6 +21,12 @@
                     </td>
                     <td style="width:20px;">
                         Price
+                    </td>
+                    <td style="width:20px;">
+                        Home
+                    </td>
+                    <td style="width:20px;">
+                        Activate
                     </td>
                     <td style="width:150px;">Actions</td>
                 </tr>
@@ -41,8 +49,34 @@
                             <td>
                                 @product.Price
                             </td>
-                            <td><a href="/admin/products/@product.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                            <a href="/admin/products/@product.ProductId" class="btn btn-primary btn-sm">Delete</a></td>
+                            <td>
+                                @if (product.IsHome)
+                                {
+                                    <i class="fa-solid fa-check"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa-regular fa-circle-xmark"></i>
+                                }
+                            </td>
+                            <td>
+                                @if (product.IsApproved)
+                                {
+                                    <i class="fa-solid fa-check"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa-regular fa-circle-xmark"></i>
+                                }
+                            </td>
+                            <td>
+                                <a href="/admin/products/@product.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
+
+                                <form action="/admin/DeleteProduct" method="post" style="display:inline">
+                                    <input type="hidden" name="ProductId" value="@product.ProductId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
 
                         </tr>
                     }}
