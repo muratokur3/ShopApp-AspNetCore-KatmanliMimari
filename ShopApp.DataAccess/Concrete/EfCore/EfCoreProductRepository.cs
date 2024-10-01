@@ -17,11 +17,11 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             using (var context = new ShopContext())
             {
 
-               return context.Products
-                                .Where(i => i.ProductId == id)
-                                .Include(i => i.ProductCategories)
-                                .ThenInclude(i => i.Category)
-                                .FirstOrDefault();
+                return context.Products
+                                 .Where(i => i.ProductId == id)
+                                 .Include(i => i.ProductCategories)
+                                 .ThenInclude(i => i.Category)
+                                 .FirstOrDefault();
             }
         }
 
@@ -29,7 +29,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
         {
             using (var context = new ShopContext())
             {
-                var products = context.Products.Where(i=>i.IsApproved).AsQueryable();
+                var products = context.Products.Where(i => i.IsApproved).AsQueryable();
                 if (!string.IsNullOrEmpty(category))
                 {
                     products = products
@@ -43,15 +43,15 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         public List<Product> GetHomePageProducts()
         {
-                using(var context = new ShopContext())
-                {
-                return context.Products.Where(i=>i.IsHome).ToList();
-                }
+            using (var context = new ShopContext())
+            {
+                return context.Products.Where(i => i.IsHome).ToList();
+            }
         }
 
-        public List<Product> GetProductByCategory(string name, int page,int pageSize)
+        public List<Product> GetProductByCategory(string name, int page, int pageSize)
         {
-            using(var context = new ShopContext())
+            using (var context = new ShopContext())
             {
                 var products = context.Products.AsQueryable();
                 if (!string.IsNullOrEmpty(name))
@@ -61,13 +61,13 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                                 .ThenInclude(i => i.Category)
                                 .Where(i => i.ProductCategories.Any(a => a.Category.Url == name));
                 }
-                return products.Skip((page-1)*pageSize).Take(pageSize).ToList();
+                return products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             }
         }
 
         public Product GetProductDetails(string url)
         {
-             using (var context = new ShopContext())
+            using (var context = new ShopContext())
             {
                 return context.Products
                                 .Where(i => i.Url == url)
@@ -80,12 +80,12 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         public List<Product> GetSearchResult(string searchString)
         {
-            using(var context = new ShopContext())
-                {
+            using (var context = new ShopContext())
+            {
                 var products = context.Products.AsQueryable();
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    products = products.Where(i => i.IsApproved&&(i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())));
+                    products = products.Where(i => i.IsApproved && (i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())));
                 }
                 return products.ToList();
             }
@@ -93,7 +93,28 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         public void Update(Product entity, int[] categoryIds)
         {
-            throw new NotImplementedException();
+            using (var context = new ShopContext())
+            {
+                var product = context.Products
+                                    .Include(i => i.ProductCategories)
+                                    .FirstOrDefault(i => i.ProductId == entity.ProductId);
+                if (product != null)
+                {
+                    product.Name = entity.Name;
+                    product.Url = entity.Url;
+                    product.Price = entity.Price;
+                    product.Description = entity.Description;
+                    product.ImageUrl = entity.ImageUrl;
+                    product.IsApproved = entity.IsApproved;
+                    product.IsHome = entity.IsHome;
+                    product.ProductCategories = categoryIds.Select(catid => new ProductCategory()
+                    {
+                        CategoryId = catid,
+                        ProductId = entity.ProductId
+                    }).ToList();
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

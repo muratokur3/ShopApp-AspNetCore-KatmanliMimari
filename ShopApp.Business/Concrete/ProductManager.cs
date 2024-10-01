@@ -68,5 +68,10 @@ namespace ShopApp.Business.Concrete
         {
             return _productRepository.GetByIdWithCategories(id);
         }
+
+        public void Update(Product entity, int[] categoryIds)
+        {
+             _productRepository.Update(entity,categoryIds);
+        }
     }
 }
