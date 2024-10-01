@@ -63,5 +63,10 @@ namespace ShopApp.Business.Concrete
         {
             return _productRepository.GetSearchResult(searchString);
         }
+
+        public Product GetByIdWithCategories(int id)
+        {
+            return _productRepository.GetByIdWithCategories(id);
+        }
     }
 }

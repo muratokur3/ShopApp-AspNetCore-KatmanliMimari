@@ -57,7 +57,7 @@ namespace ShopApp.WebUI.Controllers
                 return NotFound();
             }
 
-            var entity = _productService.GetById((int)id);
+            var entity = _productService.GetByIdWithCategories((int)id);
             if (entity == null)
             {
                 return NotFound();
@@ -69,13 +69,15 @@ namespace ShopApp.WebUI.Controllers
                 Url = entity.Url,
                 Price = entity.Price,
                 Description = entity.Description,
-                ImageUrl = entity.ImageUrl
+                ImageUrl = entity.ImageUrl,
+                SelectedCategories = entity.ProductCategories.Select(i => i.Category).ToList()
             };
+            ViewBag.Categories = _categoryService.GetAll();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductEdit(ProductModel model)
+        public IActionResult ProductEdit(ProductModel model, int[] categoryIds)
         {
             var entity = _productService.GetById(model.ProductId);
             if (entity == null)
@@ -88,7 +90,7 @@ namespace ShopApp.WebUI.Controllers
             entity.Description = model.Description;
             entity.ImageUrl = model.ImageUrl;
 
-            _productService.Update(entity);
+            _productService.Update(entity,categoryIds);
 
             var msg = new AlertMessage()
             {
@@ -153,7 +155,7 @@ namespace ShopApp.WebUI.Controllers
             {
                 return NotFound();
             }
-            var entity = _categoryService.GetById(id);
+            var entity = _categoryService.GetByIdWithProducts(id);
             if(entity==null)
             {
                 return NotFound();
@@ -162,7 +164,8 @@ namespace ShopApp.WebUI.Controllers
             {
                 CategoryId = entity.CategoryId,
                 Name = entity.Name,
-                Url = entity.Url
+                Url = entity.Url,
+                Products = entity.ProductCategories.Select(i => i.Product).ToList()
             };
             return View(model);
         }
@@ -203,6 +206,12 @@ namespace ShopApp.WebUI.Controllers
             };
             TempData["message"] = JsonConvert.SerializeObject(msg);
             return RedirectToAction("CategoryList");
+        }
+
+        public IActionResult DeleteFromCategory(int productId,int categoryId)
+        {
+            _categoryService.DeleteFromCategory( productId,categoryId);
+            return Redirect("/admin/categoryedit/" + categoryId);
         }
     }
 }

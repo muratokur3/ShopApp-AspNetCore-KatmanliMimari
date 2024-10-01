@@ -13,8 +13,12 @@ namespace ShopApp.DataAccess.Abstract
 
         List<Product> GetHomePageProducts();
 
+        Product GetByIdWithCategories(int id);
+
         List<Product> GetProductByCategory(string name,int page,int pageSize);
         Product GetProductDetails(string url);
+
+        void Update(Product entity, int[] categoryIds);
         int GetCountByCategory(string category);
 
     }

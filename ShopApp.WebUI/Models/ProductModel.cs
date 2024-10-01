@@ -1,4 +1,6 @@
-﻿namespace ShopApp.WebUI.Models
+﻿using ShopApp.Entity;
+
+namespace ShopApp.WebUI.Models
 {
     public class ProductModel
     {
@@ -10,5 +12,7 @@
         public bool IsApproved { get; set; }
         public bool IsHome { get; set; }
         public string ImageUrl { get; set; }
+
+        public List<Category> SelectedCategories { get; set; }
     }
 }

@@ -12,6 +12,19 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreProductRepository : EfcoreGenericRepository<Product, ShopContext>, IProductRepository
     {
+        public Product GetByIdWithCategories(int id)
+        {
+            using (var context = new ShopContext())
+            {
+
+               return context.Products
+                                .Where(i => i.ProductId == id)
+                                .Include(i => i.ProductCategories)
+                                .ThenInclude(i => i.Category)
+                                .FirstOrDefault();
+            }
+        }
+
         public int GetCountByCategory(string category)
         {
             using (var context = new ShopContext())
@@ -76,6 +89,11 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                 }
                 return products.ToList();
             }
+        }
+
+        public void Update(Product entity, int[] categoryIds)
+        {
+            throw new NotImplementedException();
         }
     }
 }
