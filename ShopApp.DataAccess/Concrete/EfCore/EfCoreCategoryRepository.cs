@@ -9,7 +9,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
     {
         public void DeleteFromCategory(int productId, int categoryId)
         {
-           using(var context = new ShopContext())
+            using (var context = new ShopContext())
             {
                 var cmd = @"delete from ProductCategory where ProductId=@p0 and CategoryId=@p1";
                 context.Database.ExecuteSqlRaw(cmd, productId, categoryId);
@@ -21,11 +21,12 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             using (var context = new ShopContext())
             {
 
-               return context.Categories
-                    .Where(i => i.CategoryId == categoryId)
-                    .Include(i => i.ProductCategories)
-                    .ThenInclude(i => i.Product)
-                    .FirstOrDefault();
-            }}
+                return context.Categories
+                     .Where(i => i.CategoryId == categoryId)
+                     .Include(i => i.ProductCategories)
+                     .ThenInclude(i => i.Product)
+                     .FirstOrDefault();
+            }
         }
     }
+}
