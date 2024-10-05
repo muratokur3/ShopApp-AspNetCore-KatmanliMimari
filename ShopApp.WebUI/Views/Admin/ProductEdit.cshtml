@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-<form asp-controller="Admin" asp-action="ProductEdit" method="post">
+<form asp-controller="Admin" asp-action="ProductEdit" method="post" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-8">
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -41,8 +41,9 @@
             <div class="form-group row mb-3">
                 <label asp-for="ImageUrl" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
-                    <input class="form-control" asp-for="ImageUrl" />
-                    <span class="text-danger" asp-validation-for="ImageUrl"></span>
+                    <input type="hidden" asp-for="ImageUrl" />
+                    <img src="~/Img/@Model.ImageUrl" width="80" />
+                    <input type="file" name="file" />
                 </div>
             </div>
 
@@ -55,33 +56,39 @@
 
         </div>
         <div class="col-md-4">
-            @if (Model.SelectedCategories.Count > 0)
+            @for (int i = 0; i < Model.SelectedCategories.Count; i++)
             {
-                @for (int i = 0; i < Model.SelectedCategories.Count; i++)
-                {
-                    <input type="hidden" name="@Model.SelectedCategories[@i].CategoryId" value="@Model.SelectedCategories[@i].CategoryId" />
-                    <input type="hidden" name="@Model.SelectedCategories[@i].Name" value="@Model.SelectedCategories[@i].Name" />
-                }
-                @foreach (var category in (List<Category>)ViewBag.Categories)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               name="categoryIds"
-                               value="@category.CategoryId"
-                               id="category_@(category.CategoryId)" @(Model.SelectedCategories.Any(i => i.CategoryId == category.CategoryId) ? "checked" : "")>
-                        <label class="form-check-label" for="category_@(category.CategoryId)">
-                            @category.Name
-                        </label>
-                    </div>
-                }
+                <input type="hidden" name="SelectedCategories[@i].CategoryId" value="@Model.SelectedCategories[@i].CategoryId" />
+                <input type="hidden" name="SelectedCategories[@i].Name" value="@Model.SelectedCategories[@i].Name" />
+                <input type="hidden" name="SelectedCategories[@i].Url" value="@Model.SelectedCategories[@i].Url" />
+
             }
-            else
+            @foreach (var item in (List<Category>)ViewBag.Categories)
             {
-                <div class="alert alert-warning">
-                    <h3 colspan="4" class="text-center">No category found</h3>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           name="categoryIds"
+                           value="@item.CategoryId"
+                           id="category_@(item.CategoryId)"
+                    @(Model.SelectedCategories.Any(i => i.CategoryId == item.CategoryId) ? "checked" : "")>
+                    <label class="custom-control-label" for="category_@(item.CategoryId)">@item.Name</label>
                 </div>
             }
+            <hr />
+            <div class="custom-control custom-checkbox">
+                <input asp-for="IsApproved" type="checkbox" class="custom-control-input" />
+                <label asp-for="IsApproved" class="custom-control-label"></label>
+            </div>
+             <div class="custom-control custom-checkbox">
+                <input asp-for="IsHome" type="checkbox" class="custom-control-input" />
+                <label asp-for="IsHome" class="custom-control-label"></label>
+            </div>
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

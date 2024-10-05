@@ -12,6 +12,6 @@ namespace ShopApp.WebUI.Models
         [Required(ErrorMessage = "Category url is required")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "Category url must be between 2 and 100 characters")]
         public string Url { get; set; }
-        public List<Product> Products { get; set; }=new List<Product>();
+        public List<Product> Products { get; set; }
     }
 }

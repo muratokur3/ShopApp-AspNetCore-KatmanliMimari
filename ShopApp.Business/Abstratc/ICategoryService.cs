@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Business.Abstratc
 {
-    public interface ICategoryService
+    public interface ICategoryService:IValidator<Category>
     {
         Category GetByIdWithProducts(int categoryId);
         Category GetById(int id);

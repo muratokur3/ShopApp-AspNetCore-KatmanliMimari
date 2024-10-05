@@ -9,19 +9,27 @@ namespace ShopApp.Business.Concrete
     public class ProductManager : IProductService
     {
         private IProductRepository _productRepository;
+
+
+
         public ProductManager(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public void Create(Product entity)
+        public bool Create(Product entity)
         {
-            _productRepository.Create(entity);
+            if (Validate(entity))
+            {
+                _productRepository.Create(entity);
+                return true;
+            }
+            return false;
         }
 
         public void Delete(Product entity)
         {
-           _productRepository.Delete(entity);
+            _productRepository.Delete(entity);
         }
 
         public List<Product> GetAll()
@@ -39,14 +47,11 @@ namespace ShopApp.Business.Concrete
             return _productRepository.GetById(id);
         }
 
-        public void Update(Product entity)
-        {
-            _productRepository.Update(entity);
-        }
+    
 
         public List<Product> GetProductByCategory(string name, int page, int pageSize)
         {
-            return _productRepository.GetProductByCategory(name,page,pageSize);
+            return _productRepository.GetProductByCategory(name, page, pageSize);
         }
 
         public int GetCountByCategory(string category)
@@ -69,9 +74,43 @@ namespace ShopApp.Business.Concrete
             return _productRepository.GetByIdWithCategories(id);
         }
 
-        public void Update(Product entity, int[] categoryIds)
+     
+
+        public string ErrorMessage { get; set; }
+        public bool Validate(Product entity)
         {
-             _productRepository.Update(entity,categoryIds);
+            var isValid = true;
+            if (string.IsNullOrEmpty(entity.Name))
+            {
+                ErrorMessage += "Ürün ismi girin. \n";
+                isValid = false;
+            }
+            if (entity.Price<5)
+            {
+                ErrorMessage += "Fiyat negatif olamaz. \n";
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        public void Update(Product entity)
+        {
+            _productRepository.Update(entity);
+        }
+
+        public bool Update(Product entity, int[] categoryIds)
+        {
+            if (Validate(entity))
+            {
+                if (categoryIds.Length == 0)
+                {
+                    ErrorMessage += "Ürün için en az bir kategori seçmelisiniz.";
+                    return false;
+                }
+                _productRepository.Update(entity, categoryIds);
+                return true;
+            }
+            return false;
         }
     }
 }

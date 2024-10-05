@@ -33,6 +33,16 @@
                     <button type="submit" class="btn btn-primary">Update Category</button>
                 </div>
             </div>
+            <div id="products">
+                @for (int i = 0; i < Model.Products.Count; i++)
+                {
+                    <input type="hidden" name="Products[@i].ProductId" value="@Model.Products[@i].ProductId" />
+                    <input type="hidden" name="Products[@i].Name" value="@Model.Products[@i].Name" />
+                    <input type="hidden" name="Products[@i].Price" value="@Model.Products[@i].Price" />
+                    <input type="hidden" name="Products[@i].IsApproved" value="@Model.Products[@i].IsApproved.ToString()" />
+                    <input type="hidden" name="Products[@i].ImageUrl" value="@Model.Products[@i].ImageUrl" />
+                }
+            </div>
         </form>
     </div>
     <div class="col-md-8">
@@ -62,16 +72,7 @@
             <tbody>
                 @if (Model.Products.Count > 0)
                 {
-                    <div id="products">
-                        @for (int i = 0; i < Model.Products.Count; i++)
-                        {
-                            <input  type="hidden" name="@Model.Products[@i].ProductId" value="@Model.Products[@i].ProductId"/>
-                            <input  type="hidden" name="@Model.Products[@i].Name" value="@Model.Products[@i].Name"/>
-                            <input  type="hidden" name="@Model.Products[@i].Price" value="@Model.Products[@i].Price"/>
-                            <input  type="hidden" name="@Model.Products[@i].IsApproved" value="@Model.Products[@i].IsApproved"/>
-                            <input  type="hidden" name="@Model.Products[@i].ImageUrl" value="@Model.Products[@i].ImageUrl"/>
-                        }
-                    </div>
+                    
                     @foreach (var product in Model.Products)
                     {
                         <tr>
@@ -118,3 +119,8 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

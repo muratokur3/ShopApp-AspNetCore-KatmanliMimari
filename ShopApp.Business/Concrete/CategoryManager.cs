@@ -16,6 +16,9 @@ namespace ShopApp.Business.Concrete
         {
            _categoryRepository = categoryRepository;
         }
+
+        public string ErrorMessage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public void Create(Category entity)
         {
             _categoryRepository.Create(entity);
@@ -49,6 +52,11 @@ namespace ShopApp.Business.Concrete
         public void Update(Category entity)
         {
              _categoryRepository.Update(entity);
+        }
+
+        public bool Validate(Category entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
