@@ -25,6 +25,6 @@ namespace ShopApp.WebUI.Models
         [Required(ErrorMessage = "ImageUrl is required")]
         public string ImageUrl { get; set; }
 
-        public List<Category> SelectedCategories { get; set; }
+        public List<Category> SelectedCategories { get; set; }=new List<Category>();
     }
 }

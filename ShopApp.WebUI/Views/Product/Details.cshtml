@@ -10,7 +10,7 @@
             <div class="col-md-5">
                 <h5 class="card-title">@Model.Name</h5>
                 <h3>@Model.Price.ToString("C")₺</h3>
-                <p class="card-text">@Model.Description</p>
+                <p class="card-text"> @Html.Raw(Model.Description)</p>
                 <a href="#" class="btn btn-primary">Add to Cart</a>
             </div>
         </div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShopApp.Business.Abstratc;
 using ShopApp.Entity;
@@ -6,6 +7,7 @@ using ShopApp.WebUI.Models;
 
 namespace ShopApp.WebUI.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private IProductService _productService;
@@ -32,8 +34,7 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public IActionResult ProductCreate(ProductModel model)
         {
-            if (ModelState.IsValid)
-            {
+            
                 var entity = new Product()
                 {
                     Name = model.Name,
@@ -49,8 +50,7 @@ namespace ShopApp.WebUI.Controllers
                 }
                 CreateMessage(_productService.ErrorMessage, "danger");
                 return View(model);
-            }
-            return View(model);
+            
 
         }
 
@@ -87,7 +87,7 @@ namespace ShopApp.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductEdit(ProductModel model, int[] categoryIds)
+        public async Task<IActionResult> ProductEdit(ProductModel model, int[] categoryIds,IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -99,12 +99,22 @@ namespace ShopApp.WebUI.Controllers
                 entity.Name = model.Name;
                 entity.Price = model.Price;
                 entity.Url = model.Url;
-                entity.ImageUrl = model.ImageUrl;
                 entity.Description = model.Description;
                 entity.IsApproved = model.IsApproved;
                 entity.IsHome = model.IsHome;
 
-                
+                if (file!=null)
+                {
+                    
+                    entity.ImageUrl = file.FileName;
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Img", file.FileName);
+
+                    using (var stream = new FileStream(path,FileMode.Create))
+                    {
+                       await file.CopyToAsync(stream);
+                    }
+                }
+
 
                 if (_productService.Update(entity,categoryIds))
                 {
