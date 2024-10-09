@@ -1,21 +1,63 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShopApp.Business.Abstratc;
 using ShopApp.Entity;
+using ShopApp.WebUI.Extentions;
+using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Models;
 
 namespace ShopApp.WebUI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AdminController : Controller
     {
         private IProductService _productService;
         private ICategoryService _categoryService;
-        public AdminController(IProductService productService, ICategoryService categoryService)
+        private RoleManager<IdentityRole> _roleManager;
+        private UserManager<User> _userManager;
+        public AdminController(
+                                IProductService productService,
+                                ICategoryService categoryService,
+                                RoleManager<IdentityRole>roleManager,
+                                UserManager<User> userManager
+                                )
         {
             _productService = productService;
             _categoryService = categoryService;
+            _roleManager = roleManager;
+            _userManager = userManager;
+        }
+
+
+        public IActionResult RoleList()
+        {
+            return View(_roleManager.Roles);
+        }
+        public IActionResult RoleCreate()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> RoleCreate(RoleModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var resul=await _roleManager.CreateAsync(new IdentityRole(model.Name));
+                if (resul.Succeeded)
+                {
+                    return RedirectToAction("RoleList");
+                }
+                else
+                {
+                    foreach (var item in resul.Errors)
+                    {
+                        ModelState.AddModelError("", item.Description);
+                    }
+                }
+            }
+            return View(model);
         }
 
         public IActionResult ProductList()
@@ -45,11 +87,22 @@ namespace ShopApp.WebUI.Controllers
                 };
                 if (_productService.Create(entity))
                 {
-                    CreateMessage($"{entity.Name} was added successfully", "success");
-                    return RedirectToAction("productList");
+                TempData.Put("message", new AlertMessage()
+                {
+                    Title = "was added successfully",
+                    Message = $"{entity.Name} was added successfully",
+                    AlertType = "success"
+                });
+                return RedirectToAction("productList");
                 }
-                CreateMessage(_productService.ErrorMessage, "danger");
-                return View(model);
+                
+            TempData.Put("message", new AlertMessage()
+            {
+                Title = _productService.ErrorMessage,
+                Message = _productService.ErrorMessage,
+                AlertType = "danger"
+            });
+            return View(model);
             
 
         }
@@ -118,10 +171,20 @@ namespace ShopApp.WebUI.Controllers
 
                 if (_productService.Update(entity,categoryIds))
                 {
-                    CreateMessage($"{entity.Name} was updated successfully", "success");
+                    TempData.Put("message", new AlertMessage()
+                    {
+                        Title = "updated successfully",
+                        Message = $"{entity.Name} was updated successfully",
+                        AlertType = "successful"
+                    });
                     return RedirectToAction("ProductList");
                 }
-                CreateMessage(_productService.ErrorMessage, "danger");
+                TempData.Put("message", new AlertMessage()
+                {
+                    Title = _productService.ErrorMessage,
+                    Message = _productService.ErrorMessage,
+                    AlertType = "danger"
+                });
 
             }
 
@@ -171,12 +234,13 @@ namespace ShopApp.WebUI.Controllers
                     Url = model.Url
                 };
                 _categoryService.Create(entity);
-                var msg = new AlertMessage()
+                
+                TempData.Put("message", new AlertMessage()
                 {
+                    Title = "was added successfully",
                     AlertType = "success",
                     Message = $"{entity.Name} was added successfully"
-                };
-                TempData["message"] = JsonConvert.SerializeObject(msg);
+                });
                 return RedirectToAction("CategoryList");
             }
             return View(model);
@@ -220,14 +284,13 @@ namespace ShopApp.WebUI.Controllers
 
                 _categoryService.Update(entity);
 
-                var msg = new AlertMessage()
+               
+                TempData.Put("message", new AlertMessage()
                 {
+                    Title = "was updated successfully",
                     Message = $"{entity.Name} isimli category güncellendi.",
                     AlertType = "success"
-                };
-
-                TempData["message"] = JsonConvert.SerializeObject(msg);
-
+                });
                 return RedirectToAction("CategoryList");
             }
             return View(model);
@@ -239,12 +302,13 @@ namespace ShopApp.WebUI.Controllers
             {
                 _categoryService.Delete(entity);
             }
-            var msg = new AlertMessage()
+            
+            TempData.Put("message", new AlertMessage()
             {
+                Title = "was deleted successfully",
                 AlertType = "danger",
                 Message = $"{entity.Name} was deleted successfully"
-            };
-            TempData["message"] = JsonConvert.SerializeObject(msg);
+            });
             return RedirectToAction("CategoryList");
         }
 
@@ -253,14 +317,7 @@ namespace ShopApp.WebUI.Controllers
             _categoryService.DeleteFromCategory(productId, categoryId);
             return Redirect("/admin/categoryedit/" + categoryId);
         }
-        private void CreateMessage(string message, string alertType)
-        {
-            TempData["message"] = JsonConvert.SerializeObject(new AlertMessage()
-            {
-                Message = message,
-                AlertType = alertType
-            });
-        }
+        
     }
 }
 

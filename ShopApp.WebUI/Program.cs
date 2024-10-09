@@ -1,16 +1,53 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ShopApp.Business.Abstratc;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
+using ShopApp.WebUI.EmailServices;
 using ShopApp.WebUI.Identity;
+using System.Configuration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<Applicationcontext>(option=>option.UseSqlServer("Server=A00184508;Database=shopDb;User Id=sa;Password=12345678;Integrated Security=False;TrustServerCertificate=True;"));
+builder.Services.AddDbContext<Applicationcontext>(option => option.UseSqlServer("Server=A00184508;Database=shopDb;User Id=sa;Password=12345678;Integrated Security=False;TrustServerCertificate=True;"));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<Applicationcontext>().AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(i =>
+                new SmtpEmailSender(
+                    builder.Configuration["EmailSender:Host"],
+                    builder.Configuration.GetValue<int>("EmailSender:Port"),
+                    builder.Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                    builder.Configuration["EmailSender:UserName"],
+                    builder.Configuration["EmailSender:Password"])
+                );
+
+builder.Services.ConfigureApplicationCookie(options =>
+ {
+     // Cookie settings
+
+     options.LoginPath = "/account/login";
+     options.LogoutPath = "/account/logout";
+     options.AccessDeniedPath = "/account/accessdenied";
+     options.SlidingExpiration = true;
+     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+     options.Cookie = new CookieBuilder
+     {
+         HttpOnly = true,
+         Name = ".ShopApp.Security.Cookie",
+         SameSite = SameSiteMode.Strict
+     };
+ });
+
+builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
+
+builder.Services.AddScoped<IProductService, ProductManager>();
+builder.Services.AddScoped<ICategoryService, CategoryManager>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -34,36 +71,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 
-    
+
 
 });
-
- builder.Services.ConfigureApplicationCookie(options =>
- {
-    // Cookie settings
-
-    options.LoginPath = "/account/login";
-    options.LogoutPath = "/account/logout";
-    options.AccessDeniedPath = "/account/accessdenied";
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-     options.Cookie= new CookieBuilder
-     {
-         HttpOnly = true,
-         Name = ".ShopApp.Security.Cookie",
-         //SameSite = SameSiteMode.Strict
-     };
-     });
-
-
-
-
-builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
-
-builder.Services.AddScoped<IProductService, ProductManager>();
-builder.Services.AddScoped<ICategoryService, CategoryManager>();
-
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
@@ -94,6 +104,20 @@ app.UseAuthentication();
 
 app.UseEndpoints(endpoints =>
 {
+    //Admin role create
+    endpoints.MapControllerRoute(
+        name: "adminroles",
+        pattern: "admin/role/list",
+        defaults: new { controller = "Admin", action = "RoleList" });
+
+    //Admin role create
+    endpoints.MapControllerRoute(
+        name: "adminroles",
+        pattern: "admin/role/create",
+        defaults: new { controller = "Admin", action = "RoleCreate" });
+
+
+
 
     //Admin category create
     endpoints.MapControllerRoute(
@@ -101,7 +125,7 @@ app.UseEndpoints(endpoints =>
         pattern: "admin/categories/create",
         defaults: new { controller = "Admin", action = "CategoryCreate" });
 
- //Admin category list
+    //Admin category list
     endpoints.MapControllerRoute(
         name: "admincategories",
         pattern: "admin/categories",
@@ -113,7 +137,7 @@ app.UseEndpoints(endpoints =>
         pattern: "admin/categories/{id?}",
         defaults: new { controller = "Admin", action = "CategoryEdit" });
 
-   
+
     //Admin product create
     endpoints.MapControllerRoute(
         name: "adminproductcreate",
