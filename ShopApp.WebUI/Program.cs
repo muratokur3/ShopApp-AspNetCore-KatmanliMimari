@@ -116,6 +116,12 @@ app.UseEndpoints(endpoints =>
         pattern: "admin/role/create",
         defaults: new { controller = "Admin", action = "RoleCreate" });
 
+    //Admin role edit
+    endpoints.MapControllerRoute(
+        name: "adminroleedit",
+        pattern: "admin/role/{id?}",
+        defaults: new { controller = "Admin", action = "RoleEdit" });
+
 
 
 

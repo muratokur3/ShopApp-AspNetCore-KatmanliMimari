@@ -2,8 +2,6 @@
 @model IEnumerable<IdentityRole>
 
 
-
-
 <div class="row">
     <div class="col-md-12">
         <h1>Admin Roles</h1>
@@ -36,7 +34,7 @@
                             </td>
 
                             <td >
-                                <a href="/admin/role/edit/@item.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                <a href="/admin/role/@item.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
 
                                 <form action="/admin/role/delete" method="post" style="display:inline">
                                     <input type="hidden" name="RoleId" value="@item.Id" />
