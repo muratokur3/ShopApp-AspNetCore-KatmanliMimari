@@ -104,6 +104,20 @@ app.UseAuthentication();
 
 app.UseEndpoints(endpoints =>
 {
+
+
+    //Admin user edit
+    endpoints.MapControllerRoute(
+        name: "adminuseredit",
+        pattern: "admin/user/{id?}",
+        defaults: new { controller = "Admin", action = "UserEdit" });
+
+    //Admin user list
+    endpoints.MapControllerRoute(
+        name: "adminusers",
+        pattern: "admin/user/list",
+        defaults: new { controller = "Admin", action = "UserList" });
+
     //Admin role create
     endpoints.MapControllerRoute(
         name: "adminroles",

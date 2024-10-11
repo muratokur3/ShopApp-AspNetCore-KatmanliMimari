@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 <nav class="navbar bg-primary navbar-dark navbar-expand-sm">
     <div class="container">
         <a href="/" class="navbar-brand">
@@ -24,7 +22,6 @@
                         Orders
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a asp-controller="admin" asp-action="productlist" class="nav-link">
                         Admin Products
@@ -35,12 +32,17 @@
                         Admin Categories
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a asp-controller="admin" asp-action="RoleList" class="nav-link">
+                        Admin Role List
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="admin" asp-action="UserList" class="nav-link">
+                        Admin User List
+                    </a>
+                </li>
             }
-
-
-
-
-
         </ul>
 
         <ul class="navbar-nav ml-auto">

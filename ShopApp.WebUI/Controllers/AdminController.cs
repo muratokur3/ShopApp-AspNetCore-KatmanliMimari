@@ -12,7 +12,7 @@ using ShopApp.WebUI.Models;
 
 namespace ShopApp.WebUI.Controllers
 {
-    //[Authorize]
+    //[Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private IProductService _productService;
@@ -22,7 +22,7 @@ namespace ShopApp.WebUI.Controllers
         public AdminController(
                                 IProductService productService,
                                 ICategoryService categoryService,
-                                RoleManager<IdentityRole>roleManager,
+                                RoleManager<IdentityRole> roleManager,
                                 UserManager<User> userManager
                                 )
         {
@@ -32,13 +32,57 @@ namespace ShopApp.WebUI.Controllers
             _userManager = userManager;
         }
 
+
+        public IActionResult UserList()
+        {
+            return View(_userManager.Users);
+        }
+
+
+
+
+
+        public async Task<IActionResult> UserEdit(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var selectedRoles = await _userManager.GetRolesAsync(user);
+                var roles = _roleManager.Roles.Select(i => i.Name);
+                ViewBag.Roles = roles;
+
+                return View(new UserDetailModel()
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    SelectedRoles = selectedRoles
+                });
+            }
+            TempData.Put("message", new AlertMessage()
+            {
+                Title = "User not found",
+                Message = "User not found",
+                AlertType = "danger"
+            });
+            return Redirect("~/");
+
+        }
+
+
+
+
+
         public async Task<IActionResult> RoleEdit(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
 
             var members = new List<User>();
             var nonmembers = new List<User>();
-            var users =await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
             foreach (var user in users)
             {
                 var list = await _userManager.IsInRoleAsync(user, role.Name) ? members : nonmembers;
@@ -57,36 +101,36 @@ namespace ShopApp.WebUI.Controllers
         {
             //if (ModelState.IsValid)
             //{
-                foreach (var userId in model.IdsToAdd ?? new string[] { })
+            foreach (var userId in model.IdsToAdd ?? new string[] { })
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
                 {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user != null)
+                    var result = await _userManager.AddToRoleAsync(user, model.RoleName);
+                    if (!result.Succeeded)
                     {
-                        var result = await _userManager.AddToRoleAsync(user, model.RoleName);
-                        if (!result.Succeeded)
+                        foreach (var error in result.Errors)
                         {
-                            foreach (var error in result.Errors)
-                            {
-                                ModelState.AddModelError("", error.Description);
-                            }
+                            ModelState.AddModelError("", error.Description);
                         }
                     }
                 }
+            }
 
-                foreach (var userId in model.IdsToDelete ?? new string[] { })
+            foreach (var userId in model.IdsToDelete ?? new string[] { })
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
                 {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user != null)
+                    var result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
+                    if (!result.Succeeded)
                     {
-                        var result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
-                        if (!result.Succeeded)
+                        foreach (var error in result.Errors)
                         {
-                            foreach (var error in result.Errors)
-                            {
-                                ModelState.AddModelError("", error.Description);
-                            }
+                            ModelState.AddModelError("", error.Description);
                         }
                     }
+                }
                 //}
             }
             return Redirect("/admin/role/" + model.RoleId);
@@ -105,7 +149,7 @@ namespace ShopApp.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var resul=await _roleManager.CreateAsync(new IdentityRole(model.Name));
+                var resul = await _roleManager.CreateAsync(new IdentityRole(model.Name));
                 if (resul.Succeeded)
                 {
                     return RedirectToAction("RoleList");
@@ -137,17 +181,17 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public IActionResult ProductCreate(ProductModel model)
         {
-            
-                var entity = new Product()
-                {
-                    Name = model.Name,
-                    Url = model.Url,
-                    Price = model.Price,
-                    Description = model.Description,
-                    ImageUrl = model.ImageUrl
-                };
-                if (_productService.Create(entity))
-                {
+
+            var entity = new Product()
+            {
+                Name = model.Name,
+                Url = model.Url,
+                Price = model.Price,
+                Description = model.Description,
+                ImageUrl = model.ImageUrl
+            };
+            if (_productService.Create(entity))
+            {
                 TempData.Put("message", new AlertMessage()
                 {
                     Title = "was added successfully",
@@ -155,8 +199,8 @@ namespace ShopApp.WebUI.Controllers
                     AlertType = "success"
                 });
                 return RedirectToAction("productList");
-                }
-                
+            }
+
             TempData.Put("message", new AlertMessage()
             {
                 Title = _productService.ErrorMessage,
@@ -164,7 +208,7 @@ namespace ShopApp.WebUI.Controllers
                 AlertType = "danger"
             });
             return View(model);
-            
+
 
         }
 
@@ -201,7 +245,7 @@ namespace ShopApp.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductEdit(ProductModel model, int[] categoryIds,IFormFile file)
+        public async Task<IActionResult> ProductEdit(ProductModel model, int[] categoryIds, IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -217,20 +261,20 @@ namespace ShopApp.WebUI.Controllers
                 entity.IsApproved = model.IsApproved;
                 entity.IsHome = model.IsHome;
 
-                if (file!=null)
+                if (file != null)
                 {
-                    
+
                     entity.ImageUrl = file.FileName;
                     var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Img", file.FileName);
 
-                    using (var stream = new FileStream(path,FileMode.Create))
+                    using (var stream = new FileStream(path, FileMode.Create))
                     {
-                       await file.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
                 }
 
 
-                if (_productService.Update(entity,categoryIds))
+                if (_productService.Update(entity, categoryIds))
                 {
                     TempData.Put("message", new AlertMessage()
                     {
@@ -295,7 +339,7 @@ namespace ShopApp.WebUI.Controllers
                     Url = model.Url
                 };
                 _categoryService.Create(entity);
-                
+
                 TempData.Put("message", new AlertMessage()
                 {
                     Title = "was added successfully",
@@ -345,7 +389,7 @@ namespace ShopApp.WebUI.Controllers
 
                 _categoryService.Update(entity);
 
-               
+
                 TempData.Put("message", new AlertMessage()
                 {
                     Title = "was updated successfully",
@@ -363,7 +407,7 @@ namespace ShopApp.WebUI.Controllers
             {
                 _categoryService.Delete(entity);
             }
-            
+
             TempData.Put("message", new AlertMessage()
             {
                 Title = "was deleted successfully",
@@ -378,7 +422,7 @@ namespace ShopApp.WebUI.Controllers
             _categoryService.DeleteFromCategory(productId, categoryId);
             return Redirect("/admin/categoryedit/" + categoryId);
         }
-        
+
     }
 }
 
