@@ -12,7 +12,7 @@ using ShopApp.WebUI.Models;
 
 namespace ShopApp.WebUI.Controllers
 {
-    //[Authorize(Roles = "admin")]
+  
     public class AdminController : Controller
     {
         private IProductService _productService;
@@ -37,9 +37,6 @@ namespace ShopApp.WebUI.Controllers
         {
             return View(_userManager.Users);
         }
-
-
-
 
 
         public async Task<IActionResult> UserEdit(string id)
@@ -69,7 +66,47 @@ namespace ShopApp.WebUI.Controllers
                 AlertType = "danger"
             });
             return Redirect("~/");
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> UserEdit(UserDetailModel model, string[] selectedRoles)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user != null)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.EmailConfirmed = model.EmailConfirmed;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    selectedRoles = selectedRoles ?? new string[] { };
+                    result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles).ToArray<string>());
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Selected roles cannot be added");
+                        return View(model);
+                    }
+                    result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles).ToArray<string>());
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Selected roles cannot be removed");
+                        return View(model);
+                    }
+                    TempData.Put("message", new AlertMessage()
+                    {
+                        Title = "User updated successfully",
+                        Message = "User updated successfully",
+                        AlertType = "success"
+                    });
+                    return RedirectToAction("UserList");
+                }
+            }
+            return View(model);
         }
 
 

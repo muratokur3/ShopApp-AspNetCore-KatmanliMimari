@@ -104,6 +104,11 @@ app.UseAuthentication();
 
 app.UseEndpoints(endpoints =>
 {
+//Admin user list
+    endpoints.MapControllerRoute(
+        name: "adminusers",
+        pattern: "admin/user/list",
+        defaults: new { controller = "Admin", action = "UserList" });
 
 
     //Admin user edit
@@ -112,12 +117,7 @@ app.UseEndpoints(endpoints =>
         pattern: "admin/user/{id?}",
         defaults: new { controller = "Admin", action = "UserEdit" });
 
-    //Admin user list
-    endpoints.MapControllerRoute(
-        name: "adminusers",
-        pattern: "admin/user/list",
-        defaults: new { controller = "Admin", action = "UserList" });
-
+    
     //Admin role create
     endpoints.MapControllerRoute(
         name: "adminroles",
@@ -201,5 +201,14 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    var userManager = services.GetRequiredService<UserManager<User>>();
+//    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+//    var configuration = services.GetRequiredService<IConfiguration>();
+
+//    await SeedIdentity.Seed(userManager, roleManager, configuration);
+//}
 
 app.Run();
