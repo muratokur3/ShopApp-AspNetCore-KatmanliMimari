@@ -12,7 +12,15 @@
             </small>
        <div class="card-footer text-center">
             <a asp-controller="shop" asp-action="Details" asp-route-url="@Model.Url" class="btn btn-primary">Details</a>
-            <a asp-controller="addtocart" asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-primary">Add To Cart</a>
+            @if(User.Identity.IsAuthenticated)
+            {
+                <form asp-controller="Cart" asp-action="AddToCart" style="display:inline" method="post">
+                    <input type="hidden" name="productId" value="@Model.ProductId" />
+                    <input type="number" name="quantity" value="1" />
+                    <button type="submit" class="btn btn-primary">Add To Cart</button>
+                </form>
+            }
+            
        </div>
     </div>
 </div>

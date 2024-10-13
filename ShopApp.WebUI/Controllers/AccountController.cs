@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using ShopApp.Business.Abstratc;
 using ShopApp.WebUI.EmailServices;
 using ShopApp.WebUI.Extentions;
 using ShopApp.WebUI.Identity;
@@ -14,12 +15,16 @@ namespace ShopApp.WebUI.Controllers
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
+        private ICartService _cartService;
         private IEmailSender _emailSender;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
+
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,ICartService cartService, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _cartService = cartService;
             _emailSender = emailSender;
         }
 
@@ -48,6 +53,9 @@ namespace ShopApp.WebUI.Controllers
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 try
                 {
+                    // cart objesini oluştur
+                    _cartService.initializeCart(user.Id);
+
                     // URL oluşturma
                     var url = Url.Action("ConfirmEmail", "Account", new
                     {

@@ -1,4 +1,4 @@
-﻿
+﻿@model ProductDetailModel
 
 
 <div class="card mb-3">
@@ -8,10 +8,17 @@
                 <img src="~/Img/@Model.ImageUrl" class="img-fluid rounded-start" />
             </div>
             <div class="col-md-5">
-                <h5 class="card-title">@Model.Name</h5>
-                <h3>@Model.Price.ToString("C")₺</h3>
-                <p class="card-text"> @Html.Raw(Model.Description)</p>
-                <a href="#" class="btn btn-primary">Add to Cart</a>
+                <h5 class="card-title">@Model.Product.Name</h5>
+                <h3>@Model.Product.Price ₺</h3>
+                <p class="card-text"> @Html.Raw(Model.Product.Description)</p>
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="form-inline">
+                    <input type="hidden" name="productId" value="@Model.Product.ProductId" />
+                    <div class="input-group mb-3">
+                    <input type="number" name="quantity" class="form-control" value="1" min="1" step="1" style="width:100px" />
+                    </div>
+                    <div class="input-group-append"></div>
+                    <button type="submit" class="btn btn-primary">Add To Cart</button>
+                </form>
             </div>
         </div>
     </div>
