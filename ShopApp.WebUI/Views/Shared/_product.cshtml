@@ -1,7 +1,10 @@
 ﻿@model Product
 
 <div class="card mb-5">
-    <img src="~/Img/@Model.ImageUrl" class="card-img-top" alt="...">
+    
+        <a asp-controller="shop" asp-action="Details" asp-route-url="@Model.Url">
+        <img src="~/Img/@Model.ImageUrl" class="card-img-top" alt="...">
+        </a>
     <div class="card-body">
         <h5 class="card-title
                                                                     ">
@@ -11,17 +14,18 @@
             <i class="fas fa-lira-sign"></i> @Model.Price
             </small>
        <div class="card-footer text-center">
-            <a asp-controller="shop" asp-action="Details" asp-route-url="@Model.Url" class="btn btn-primary">Details</a>
-            @if(User.Identity.IsAuthenticated)
-            {
-                <form asp-controller="Cart" asp-action="AddToCart" style="display:inline" method="post">
+            
+
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="form-inline">
                     <input type="hidden" name="productId" value="@Model.ProductId" />
-                    <input type="number" name="quantity" value="1" />
-                    <button type="submit" class="btn btn-primary">Add To Cart</button>
+                   
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary"> <i class="fas fa-cart-puls"></i>Add To Cart</button>
+                    </div>
                 </form>
-            }
             
        </div>
-    </div>
+        </div>
+    
 </div>
 

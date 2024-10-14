@@ -204,14 +204,14 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var userManager = services.GetRequiredService<UserManager<User>>();
-//    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-//    var configuration = services.GetRequiredService<IConfiguration>();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var configuration = services.GetRequiredService<IConfiguration>();
 
-//    await SeedIdentity.Seed(userManager, roleManager, configuration);
-//}
+    await SeedIdentity.Seed(userManager, roleManager, configuration);
+}
 
 app.Run();

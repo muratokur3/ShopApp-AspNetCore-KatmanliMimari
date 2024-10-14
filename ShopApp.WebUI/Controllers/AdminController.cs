@@ -12,7 +12,6 @@ using ShopApp.WebUI.Models;
 
 namespace ShopApp.WebUI.Controllers
 {
-  
     public class AdminController : Controller
     {
         private IProductService _productService;
