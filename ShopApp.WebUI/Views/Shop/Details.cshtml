@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-5">
                 <h5 class="card-title">@Model.Product.Name</h5>
-                <h3>@Model.Product.Price ₺</h3>
+                <h3><i class="fas fa-lira-sign"></i>@Model.Product.Price</h3>
                 <p class="card-text"> @Html.Raw(Model.Product.Description)</p>
                 <form asp-controller="Cart" asp-action="AddToCart" method="post" class="form-inline">
                     <input type="hidden" name="productId" value="@Model.Product.ProductId" />

@@ -9,6 +9,7 @@ namespace ShopApp.DataAccess.Abstract
 {
     public interface ICartRepository: IRepository<Cart>
     {
-
+        void DeleteFromCart(int carId, int productId);
+        Cart GetByUserId(string userId);
     }
 }

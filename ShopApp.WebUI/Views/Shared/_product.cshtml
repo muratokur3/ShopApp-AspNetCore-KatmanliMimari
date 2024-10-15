@@ -18,6 +18,7 @@
 
                 <form asp-controller="Cart" asp-action="AddToCart" method="post" class="form-inline">
                     <input type="hidden" name="productId" value="@Model.ProductId" />
+                    <input type="hidden" name="quantity" value="1" />
                    
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary"> <i class="fas fa-cart-puls"></i>Add To Cart</button>

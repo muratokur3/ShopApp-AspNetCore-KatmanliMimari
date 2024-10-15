@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using ShopApp.Business.Abstratc;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
@@ -15,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<Applicationcontext>(option => option.UseSqlServer("Server=A00184508;Database=shopDb;User Id=sa;Password=12345678;Integrated Security=False;TrustServerCertificate=True;"));
+
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<Applicationcontext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(i =>
@@ -63,8 +65,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     //options.Password.RequiredUniqueChars = 1;
 
     // Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(20);
+    options.Lockout.MaxFailedAccessAttempts = 20;
     options.Lockout.AllowedForNewUsers = true;
 
     // User settings
@@ -107,6 +109,12 @@ app.UseAuthentication();
 
 app.UseEndpoints(endpoints =>
 {
+    //Cart index
+    endpoints.MapControllerRoute(
+        name: "cart",
+        pattern: "cart",
+        defaults: new { controller = "Cart", action = "Index" });
+
 //Admin user list
     endpoints.MapControllerRoute(
         name: "adminusers",
