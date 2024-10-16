@@ -48,10 +48,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
 builder.Services.AddScoped<ICartRepository, EfCoreCartRepository>();
+builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
 
 builder.Services.AddScoped<IProductService, ProductManager>();
 builder.Services.AddScoped<ICategoryService, CategoryManager>();
 builder.Services.AddScoped<ICartService, CartManager>();
+builder.Services.AddScoped<IOrderService, OrderManager>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -109,6 +111,12 @@ app.UseAuthentication();
 
 app.UseEndpoints(endpoints =>
 {
+    //Chackout
+    endpoints.MapControllerRoute(
+        name: "checkout",
+        pattern: "checkout",
+        defaults: new { controller = "Cart", action = "Checkout" });
+
     //Cart index
     endpoints.MapControllerRoute(
         name: "cart",

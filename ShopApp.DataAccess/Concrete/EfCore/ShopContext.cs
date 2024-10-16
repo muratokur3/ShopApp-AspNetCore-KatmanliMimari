@@ -15,6 +15,8 @@ namespace ShopApp.DataAccess.Concrete.EfCore
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=A00184508;Database=shopDb;User Id=sa;Password=12345678;Integrated Security=False;TrustServerCertificate=True;");

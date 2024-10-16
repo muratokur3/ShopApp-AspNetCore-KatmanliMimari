@@ -10,9 +10,6 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreOrderRepository : EfcoreGenericRepository<Order, ShopContext>, IOrderRepository
     {
-        public List<Order> GetPopulerOrders()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

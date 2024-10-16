@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopApp.DataAccess.Abstract
+namespace ShopApp.Business.Abstratc
 {
-    public interface IOrderRepository: IRepository<Order>
+    public interface IOrderService
     {
-       
+        void Create(Order entity);
+        
     }
 }

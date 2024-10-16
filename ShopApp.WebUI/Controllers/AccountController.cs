@@ -138,6 +138,7 @@ namespace ShopApp.WebUI.Controllers
                 Message = "Logout Session",
                 AlertType = "warning"
             });
+
             return Redirect("~/");
         }
 
