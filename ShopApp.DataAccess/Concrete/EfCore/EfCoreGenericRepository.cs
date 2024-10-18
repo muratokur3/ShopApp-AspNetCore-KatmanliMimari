@@ -8,51 +8,37 @@ using System.Threading.Tasks;
 
 namespace ShopApp.DataAccess.Concrete.EfCore
 {
-    public class EfcoreGenericRepository<TEntity, TContext> : IRepository<TEntity>
+    public class EfcoreGenericRepository<TEntity> : IRepository<TEntity>
        where TEntity : class
-       where TContext : DbContext, new()
     {
+        protected readonly DbContext context;
+        public EfcoreGenericRepository(DbContext ctx)
+        {
+            this.context = ctx;
+        }
         public void Create(TEntity entity)
         {
-           using(var context = new TContext())
-            {
-                context.Set<TEntity>().Add(entity);
-                context.SaveChanges();
-            }
+            context.Set<TEntity>().Add(entity);
         }
 
         public void Delete(TEntity entity)
         {
-            using(var context = new TContext())
-            {
                 context.Set<TEntity>().Remove(entity);
-                context.SaveChanges();
-            }
         }
 
         public List<TEntity> GetAll()
         {
-            using(var context = new TContext())
-            {
                 return context.Set<TEntity>().ToList();
-            }
         }
 
         public TEntity GetById(int id)
         {
-            using(var context = new TContext())
-            {
                 return context.Set<TEntity>().Find(id);
-            }
         }
 
         public virtual void Update(TEntity entity)
         {
-            using(var context = new TContext())
-            {
                 context.Entry(entity).State = EntityState.Modified;
-                context.SaveChanges();
-            }
         }
     }
 }

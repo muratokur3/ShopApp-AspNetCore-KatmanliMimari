@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ShopApp.Entity;
 
-namespace ShopApp.Entity
+namespace ShopApp.WebUI.Models
 {
-
-    public class Order
+    public class OrderListModel
     {
-        public int Id { get; set; }
+        public int OrderId { get; set; }
         public string OrderNumber { get; set; }
         public DateTime OrderDate { get; set; }
         public string UserId { get; set; }
@@ -22,23 +17,14 @@ namespace ShopApp.Entity
         public string Email { get; set; }
         public string Note { get; set; }
 
-        public string PaymentId { get; set; }
-        public string ConversationId { get; set; }
+
         public EnumPaymentType EnumPaymentType { get; set; }
         public EnumOrderState OrderState { get; set; }
-        public List<OrderItem> OrderItems { get; set; }
-    }
 
-    public enum EnumPaymentType
-    {
-        CreditCart = 0,
-        Eft = 1,
-    }
-
-    public enum EnumOrderState
-    {
-        Waiting = 0,
-        Unpaid = 1,
-        Completed = 2
+        public List<OrderItemModel> OrderItems { get; set; }
+        public double TotalPrice()
+        {
+            return OrderItems.Sum(i => i.Price * i.Quantity);
+        }
     }
 }

@@ -1,0 +1,59 @@
+﻿@model List<OrderListModel>
+
+<h1>My Orders</h1>
+
+<hr />
+
+@foreach (var order in Model)
+{
+    <table class="table table-bordered table-sm mb-3">
+        <thead class="bg-primary">
+            <tr>
+                <th colspan="2">Order Number: #@order.OrderNumber</th>
+                <th>Price</th>
+                <th>Quantitiy</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in order.OrderItems)
+            {
+                <tr>
+                    <td><img src="~/img/@item.ImageUrl" width="50" /></td>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                </tr>
+            }
+        </tbody>
+        <hr />
+        <tfoot>
+            <tr>
+                <td colspan="2">Customer Name</td>
+                <td>@order.FirstName @order.LastName</td>
+                <td rowspan="5">Total Price: @order.TotalPrice().ToString()</td>
+            </tr>
+            <tr>
+                <td colspan="2">Order City</td>
+                <td>@order.City</td>
+            </tr>
+            <tr>
+                <td colspan="2">Address</td>
+                <td>@order.Address</td>
+            </tr>
+            <tr>
+                <td colspan="2">Phone</td>
+                <td>@order.Phone</td>
+            </tr>
+            <tr>
+                <td colspan="2">Order Date</td>
+                <td>@order.OrderDate</td>
+            </tr>
+           
+
+        </tfoot>
+    </table>
+
+
+
+
+}

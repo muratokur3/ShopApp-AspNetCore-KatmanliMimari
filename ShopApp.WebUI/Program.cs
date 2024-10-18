@@ -1,3 +1,4 @@
+using Iyzipay.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,17 @@ using ShopApp.WebUI.Identity;
 using System.Configuration;
 
 
+
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<Applicationcontext>(option => option.UseSqlServer("Server=A00184508;Database=shopDb;User Id=sa;Password=12345678;Integrated Security=False;TrustServerCertificate=True;"));
+
+
+builder.Services.AddDbContext<ShopContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<Applicationcontext>().AddDefaultTokenProviders();
 
@@ -45,10 +53,8 @@ builder.Services.ConfigureApplicationCookie(options =>
      };
  });
 
-builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
-builder.Services.AddScoped<ICartRepository, EfCoreCartRepository>();
-builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 builder.Services.AddScoped<IProductService, ProductManager>();
 builder.Services.AddScoped<ICategoryService, CategoryManager>();
@@ -96,7 +102,7 @@ if (!app.Environment.IsDevelopment())
 }
 if (app.Environment.IsDevelopment())
 {
-    SeedDatabase.Seed();
+  
     app.UseDeveloperExceptionPage();
 }
 
@@ -111,6 +117,14 @@ app.UseAuthentication();
 
 app.UseEndpoints(endpoints =>
 {
+  
+    //Order
+    endpoints.MapControllerRoute(
+        name: "order",
+        pattern: "order",
+        defaults: new { controller = "Order", action = "Index" });
+
+
     //Chackout
     endpoints.MapControllerRoute(
         name: "checkout",

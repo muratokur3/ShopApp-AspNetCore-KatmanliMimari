@@ -10,114 +10,101 @@ using System.Threading.Tasks;
 
 namespace ShopApp.DataAccess.Concrete.EfCore
 {
-    public class EfCoreProductRepository : EfcoreGenericRepository<Product, ShopContext>, IProductRepository
+    public class EfCoreProductRepository : EfcoreGenericRepository<Product>, IProductRepository
     {
+        public EfCoreProductRepository(ShopContext context) : base(context)
+        {
+        }
+        private ShopContext ShopContext
+        {
+            get { return context as ShopContext; }
+        }
         public Product GetByIdWithCategories(int id)
         {
-            using (var context = new ShopContext())
-            {
 
-                return context.Products
-                                 .Where(i => i.ProductId == id)
-                                 .Include(i => i.ProductCategories)
-                                 .ThenInclude(i => i.Category)
-                                 .FirstOrDefault();
-            }
+            return ShopContext.Products
+                             .Where(i => i.ProductId == id)
+                             .Include(i => i.ProductCategories)
+                             .ThenInclude(i => i.Category)
+                             .FirstOrDefault();
         }
 
         public int GetCountByCategory(string category)
         {
-            using (var context = new ShopContext())
+
+            var products = ShopContext.Products.Where(i => i.IsApproved).AsQueryable();
+            if (!string.IsNullOrEmpty(category))
             {
-                var products = context.Products.Where(i => i.IsApproved).AsQueryable();
-                if (!string.IsNullOrEmpty(category))
-                {
-                    products = products
-                                .Include(i => i.ProductCategories)
-                                .ThenInclude(i => i.Category)
-                                .Where(i => i.ProductCategories.Any(a => a.Category.Url == category));
-                }
-                return products.Count();
+                products = products
+                            .Include(i => i.ProductCategories)
+                            .ThenInclude(i => i.Category)
+                            .Where(i => i.ProductCategories.Any(a => a.Category.Url == category));
             }
+            return products.Count();
         }
 
         public List<Product> GetHomePageProducts()
         {
-            using (var context = new ShopContext())
-            {
-                return context.Products.Where(i => i.IsHome).ToList();
-            }
+
+            return ShopContext.Products.Where(i => i.IsHome).ToList();
         }
 
         public List<Product> GetProductByCategory(string name, int page, int pageSize)
         {
-            using (var context = new ShopContext())
+            var products = ShopContext.Products.AsQueryable();
+            if (!string.IsNullOrEmpty(name))
             {
-                var products = context.Products.AsQueryable();
-                if (!string.IsNullOrEmpty(name))
-                {
-                    products = products
-                                .Include(i => i.ProductCategories)
-                                .ThenInclude(i => i.Category)
-                                .Where(i => i.ProductCategories.Any(a => a.Category.Url == name));
-                }
-                return products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                products = products
+                            .Include(i => i.ProductCategories)
+                            .ThenInclude(i => i.Category)
+                            .Where(i => i.ProductCategories.Any(a => a.Category.Url == name));
             }
+            return products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
 
         public Product GetProductDetails(string url)
         {
-            using (var context = new ShopContext())
-            {
-                return context.Products
-                                .Where(i => i.Url == url)
-                                .Include(i => i.ProductCategories)
-                                .ThenInclude(i => i.Category)
-                                .FirstOrDefault();
+            return ShopContext.Products
+                            .Where(i => i.Url == url)
+                            .Include(i => i.ProductCategories)
+                            .ThenInclude(i => i.Category)
+                            .FirstOrDefault();
 
-            }
         }
 
         public List<Product> GetSearchResult(string searchString)
         {
-            using (var context = new ShopContext())
+            var products = ShopContext.Products.AsQueryable();
+            if (!string.IsNullOrEmpty(searchString))
             {
-                var products = context.Products.AsQueryable();
-                if (!string.IsNullOrEmpty(searchString))
-                {
-                    products = products.Where(i => i.IsApproved && (i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())));
-                }
-                return products.ToList();
+                products = products.Where(i => i.IsApproved && (i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())));
             }
+            return products.ToList();
         }
 
         public void Update(Product entity, int[] categoryIds)
         {
-            using (var context = new ShopContext())
+            var product = ShopContext.Products
+                                .Include(i => i.ProductCategories)
+                                .FirstOrDefault(i => i.ProductId == entity.ProductId);
+
+
+            if (product != null)
             {
-                var product = context.Products
-                                    .Include(i => i.ProductCategories)
-                                    .FirstOrDefault(i => i.ProductId == entity.ProductId);
+                product.Name = entity.Name;
+                product.Price = entity.Price;
+                product.Description = entity.Description;
+                product.Url = entity.Url;
+                product.ImageUrl = entity.ImageUrl;
+                product.IsApproved = entity.IsApproved;
+                product.IsHome = entity.IsHome;
 
-
-                if (product != null)
+                product.ProductCategories = categoryIds.Select(catid => new ProductCategory()
                 {
-                    product.Name = entity.Name;
-                    product.Price = entity.Price;
-                    product.Description = entity.Description;
-                    product.Url = entity.Url;
-                    product.ImageUrl = entity.ImageUrl;
-                    product.IsApproved = entity.IsApproved;
-                    product.IsHome = entity.IsHome;
+                    ProductId = entity.ProductId,
+                    CategoryId = catid
+                }).ToList();
 
-                    product.ProductCategories = categoryIds.Select(catid => new ProductCategory()
-                    {
-                        ProductId = entity.ProductId,
-                        CategoryId = catid
-                    }).ToList();
-
-                    context.SaveChanges();
-                }
             }
         }
 

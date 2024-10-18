@@ -101,20 +101,20 @@ namespace ShopApp.WebUI.Controllers
                 };
                 var payment = PaymentProcess(model);
 
-                if (payment.Result.Status == "success")
-                {
                     SaveOrder(model, payment, userId);
                     ClearCart(model.CartModel.CartId);
-                    return View("Success");
-                }
-                else {
-                    TempData.Put("message", new AlertMessage()
-                    {
-                        Title = "Payment Error",
-                        Message = payment.Result.ErrorMessage,
-                        AlertType = "danger"
-                    });
-                }
+                //if (payment.Result.Status == "success")
+                //{
+                //    return View("Success");
+                //}
+                //else {
+                //    TempData.Put("message", new AlertMessage()
+                //    {
+                //        Title = "Payment Error",
+                //        Message = payment.Result.ErrorMessage,
+                //        AlertType = "danger"
+                //    });
+                //}
 
             return View(model);
         }
@@ -131,9 +131,11 @@ namespace ShopApp.WebUI.Controllers
                 OrderNumber = (new Random()).Next(111111, 999999).ToString(),
                 OrderState = EnumOrderState.Completed,
                 EnumPaymentType = EnumPaymentType.CreditCart,
-                PaymentId = payment.Result.PaymentId,
-                ConversationId = payment.Result.ConversationId,
-                FirsName = model.FirstName,
+                PaymentId = (new Random()).Next(1111, 9999).ToString(),
+                ConversationId = (new Random()).Next(111,999).ToString(),
+                //PaymentId = payment.Result.PaymentId,
+                //ConversationId = payment.Result.ConversationId,
+                FirstName = model.FirstName,
                 LastName = model.LastName,
                 UserId = userId,
                 Email = model.Email,

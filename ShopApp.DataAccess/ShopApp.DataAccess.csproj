@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Concrete\AdoNet\" />
     <Folder Include="Concrete\Dapper\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
