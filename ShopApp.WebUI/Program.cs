@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using ShopApp.Business.Abstratc;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
 using ShopApp.WebUI.EmailServices;
+using ShopApp.WebUI.Extentions;
 using ShopApp.WebUI.Identity;
 using System.Configuration;
 
@@ -18,6 +20,7 @@ using System.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddDbContext<Applicationcontext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 builder.Services.AddDbContext<ShopContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
@@ -88,6 +91,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
+app.ApplyPendingMigrations();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -111,6 +116,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseAuthentication();
+
 
 app.UseEndpoints(endpoints =>
 {
@@ -231,14 +237,15 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
-using (var scope = app.Services.CreateScope())
+await using (var scope = app.Services.CreateAsyncScope())
 {
     var services = scope.ServiceProvider;
     var userManager = services.GetRequiredService<UserManager<User>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var cartService = services.GetRequiredService<ICartService>();
     var configuration = services.GetRequiredService<IConfiguration>();
 
-    await SeedIdentity.Seed(userManager, roleManager, configuration);
-}
+    await SeedIdentity.Seed(userManager, roleManager, cartService, configuration);
+} 
 
 app.Run();
