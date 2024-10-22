@@ -36,14 +36,14 @@ namespace ShopApp.Business.Concrete
              _unitofwork.Categories.DeleteFromCategory(productId, categoryId);
         }
 
-        public List<Category> GetAll()
+        public async Task<List<Category>> GetAll()
         {
-            return  _unitofwork.Categories.GetAll();
+            return await _unitofwork.Categories.GetAll();
         }
 
-        public Category GetById(int id)
+        public async Task<Category> GetById(int id)
         {
-            return  _unitofwork.Categories.GetById(id);
+            return  await _unitofwork.Categories.GetById(id);
         }
 
         public Category GetByIdWithProducts(int categoryId)

@@ -31,9 +31,9 @@ namespace ShopApp.Business.Concrete
             _unitofwork.save();
         }
 
-        public List<Product> GetAll()
+        public async Task<List<Product>> GetAll()
         {
-            return _unitofwork.Products.GetAll();
+            return await _unitofwork.Products.GetAll();
         }
 
         public Product GetProductDetails(string url)
@@ -41,9 +41,9 @@ namespace ShopApp.Business.Concrete
             return _unitofwork.Products.GetProductDetails(url);
         }
 
-        public Product GetById(int id)
+        public async Task<Product> GetById(int id)
         {
-            return _unitofwork.Products.GetById(id);
+            return await _unitofwork.Products.GetById(id);
         }
 
     

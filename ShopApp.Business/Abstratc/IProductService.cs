@@ -15,8 +15,8 @@ namespace ShopApp.Business.Abstratc
         List<Product> GetProductByCategory(string name, int page, int pageSize);
         List<Product> GetHomePageProducts();
         List<Product> GetSearchResult(string searchString);
-        Product GetById(int id);
-        List<Product> GetAll();
+        Task<Product> GetById(int id);
+        Task<List<Product>> GetAll();
         bool Create(Product entity);
         void Update(Product entity);
         void Delete(Product entity);

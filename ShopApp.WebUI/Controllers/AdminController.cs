@@ -201,11 +201,12 @@ namespace ShopApp.WebUI.Controllers
             return View(model);
         }
 
-        public IActionResult ProductList()
+        public async Task<IActionResult> ProductList()
         {
+            var products = await _productService.GetAll();
             return View(new ProductListViewModel()
             {
-                Products = _productService.GetAll()
+                Products = products
             });
         }
 
@@ -248,7 +249,7 @@ namespace ShopApp.WebUI.Controllers
 
         }
 
-        public IActionResult ProductEdit(int? id)
+        public async Task<IActionResult> ProductEdit(int? id)
         {
             if (id == null)
             {
@@ -275,7 +276,7 @@ namespace ShopApp.WebUI.Controllers
                 SelectedCategories = entity.ProductCategories.Select(i => i.Category).ToList()
             };
 
-            ViewBag.Categories = _categoryService.GetAll();
+            ViewBag.Categories =await _categoryService.GetAll();
 
             return View(model);
         }
@@ -285,7 +286,7 @@ namespace ShopApp.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var entity = _productService.GetById(model.ProductId);
+                var entity =await _productService.GetById(model.ProductId);
                 if (entity == null)
                 {
                     return NotFound();
@@ -329,13 +330,13 @@ namespace ShopApp.WebUI.Controllers
 
             }
 
-            ViewBag.Categories = _categoryService.GetAll();
+            ViewBag.Categories =await _categoryService.GetAll();
             return View(model);
         }
 
-        public IActionResult DeleteProduct(int productId)
+        public async Task<IActionResult> DeleteProduct(int productId)
         {
-            var entity = _productService.GetById(productId);
+            var entity =await _productService.GetById(productId);
             if (entity != null)
             {
                 _productService.Delete(entity);
@@ -353,11 +354,12 @@ namespace ShopApp.WebUI.Controllers
 
 
 
-        public IActionResult CategoryList()
+        public async Task<IActionResult> CategoryList()
         {
+            var categories = await _categoryService.GetAll();
             return View(new CategoryViewModel()
             {
-                Categories = _categoryService.GetAll()
+                Categories = categories
             });
         }
         public IActionResult CategoryCreate()
@@ -411,11 +413,11 @@ namespace ShopApp.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CategoryEdit(CategoryModel model)
+        public async Task<IActionResult> CategoryEdit(CategoryModel model)
         {
             if (ModelState.IsValid)
             {
-                var entity = _categoryService.GetById(model.CategoryId);
+                var entity =await _categoryService.GetById(model.CategoryId);
                 if (entity == null)
                 {
                     return NotFound();
@@ -436,9 +438,9 @@ namespace ShopApp.WebUI.Controllers
             }
             return View(model);
         }
-        public IActionResult DeleteCategory(int CategoryId)
+        public async Task<IActionResult> DeleteCategory(int CategoryId)
         {
-            var entity = _categoryService.GetById(CategoryId);
+            var entity =await _categoryService.GetById(CategoryId);
             if (entity != null)
             {
                 _categoryService.Delete(entity);

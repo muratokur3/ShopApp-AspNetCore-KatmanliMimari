@@ -14,13 +14,12 @@ namespace ShopApp.WebUI.ViewComponents
         }
 
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-
 
             if (RouteData.Values["category"] !=null)
                 ViewBag.SelectedCategory = RouteData?.Values["category"];
-            return View(_categoryServices.GetAll());
+            return View(await _categoryServices.GetAll());
         }
 
     }

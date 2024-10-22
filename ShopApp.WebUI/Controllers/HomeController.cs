@@ -15,12 +15,12 @@ namespace ShopApp.WebUI.Controllers
            this._productServices = productServices;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
+           var prducts= await _productServices.GetAll();
             var productViewModel = new ProductListViewModel
             {
-                Products = _productServices.GetAll()
+                Products = prducts
             };
 
             return View(productViewModel);
