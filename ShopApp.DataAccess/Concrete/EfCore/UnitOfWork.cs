@@ -37,5 +37,11 @@ namespace ShopApp.DataAccess.Concrete.EfCore
         {
             _context.SaveChanges();
         }
+
+        public async Task<int> saveAsync()
+        {
+          return await  _context.SaveChangesAsync();
+
+        }
     }
 }

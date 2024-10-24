@@ -13,5 +13,6 @@ namespace ShopApp.DataAccess.Abstract
         ICartRepository Carts { get; }
         IOrderRepository Orders { get; }
         void save();
+        Task<int> saveAsync();
     }
 }

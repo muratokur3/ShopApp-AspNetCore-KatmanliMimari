@@ -28,13 +28,13 @@ builder.Services.AddDbContext<ShopContext>(option => option.UseSqlServer(builder
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<Applicationcontext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(i =>
-                new SmtpEmailSender(
-                    builder.Configuration["EmailSender:Host"],
-                    builder.Configuration.GetValue<int>("EmailSender:Port"),
-                    builder.Configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                    builder.Configuration["EmailSender:UserName"],
-                    builder.Configuration["EmailSender:Password"])
-                );
+    new SmtpEmailSender(
+        builder.Configuration["EmailSender:Host"],
+        builder.Configuration.GetValue<int>("EmailSender:Port"),
+        builder.Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+        builder.Configuration["EmailSender:Email"], 
+        builder.Configuration["EmailSender:Password"])
+);
 
 builder.Services.ConfigureApplicationCookie(options =>
  {

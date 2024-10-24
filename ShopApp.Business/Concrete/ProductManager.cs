@@ -24,13 +24,34 @@ namespace ShopApp.Business.Concrete
             }
             return false;
         }
+        public async Task<Product> CreateAsync(Product entity)
+        {
+           
+             await _unitofwork.Products.CreateAsync(entity);
+            await _unitofwork.saveAsync();
+            return entity;
+        }
+        public Task UpdateAsync(Product entityToUpdate, Product entity)
+        {
+            entityToUpdate.Name = entity.Name;
+            entityToUpdate.Price = entity.Price;
+            entityToUpdate.ImageUrl = entity.ImageUrl;
+            entityToUpdate.Description = entity.Description;
+            entityToUpdate.Url = entity.Url;
+            entityToUpdate.ProductCategories = entity.ProductCategories;
+            return _unitofwork.saveAsync();
 
+        }
         public void Delete(Product entity)
         {
             _unitofwork.Products.Delete(entity);
             _unitofwork.save();
         }
-
+        public async Task DeleteAsync(Product entity)
+        {
+            _unitofwork.Products.Delete(entity);
+            await _unitofwork.saveAsync();
+        }
         public async Task<List<Product>> GetAll()
         {
             return await _unitofwork.Products.GetAll();
@@ -113,5 +134,7 @@ namespace ShopApp.Business.Concrete
             }
             return false;
         }
+
+       
     }
 }

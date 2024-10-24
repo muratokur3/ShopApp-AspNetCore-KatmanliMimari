@@ -14,6 +14,8 @@ namespace ShopApp.Business.Abstratc
         void DeleteFromCategory(int productId, int categoryId);
         Task<List<Category>> GetAll();
         void Create(Category entity);
+        Task<Category> CreateAsync(Category entity);
+
         void Update(Category entity);
         void Delete(Category entity);
        

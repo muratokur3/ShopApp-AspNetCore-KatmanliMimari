@@ -14,6 +14,7 @@ namespace ShopApp.Entity
         public string ImageUrl { get; set; }
 
         public DateTime DateAdded { get; set; }
+
         public List<ProductCategory> ProductCategories { get; set; }
 
     }

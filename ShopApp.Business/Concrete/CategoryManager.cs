@@ -24,7 +24,13 @@ namespace ShopApp.Business.Concrete
             _unitofwork.Categories.Create(entity);
             _unitofwork.save();
         }
+        public async Task<Category> CreateAsync(Category entity)
+        {
 
+            await _unitofwork.Categories.CreateAsync(entity);
+            await _unitofwork.saveAsync();
+            return entity;
+        }
         public void Delete(Category entity)
         {
             _unitofwork.Categories.Delete(entity);

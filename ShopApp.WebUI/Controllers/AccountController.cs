@@ -77,13 +77,13 @@ namespace ShopApp.WebUI.Controllers
                     ModelState.AddModelError("", $"E-posta gönderme hatası: {ex.Message}");
                     return View(model);
                 }
-                //var url = Url.Action("ConfirmEmail", "Account", new
+                //var url = url.action("confirmemail", "account", new
                 //{
-                //    userId = user.Id,
+                //    userıd = user.ıd,
                 //    token = code
                 //});
                 ////mail
-                //await _emailSender.SendEmailAsync(model.Email, "Hesabınızı onaylayın", $"Lütfen hesabınızı onaylamak için <a href='https://localhost:7047{url}'>Linke</a> tıklayınız");
+                //await _emailsender.sendemailasync(model.email, "hesabınızı onaylayın", $"lütfen hesabınızı onaylamak için <a href='https://localhost:7047{url}'>linke</a> tıklayınız");
 
                 return RedirectToAction("Login", "Account");
             }

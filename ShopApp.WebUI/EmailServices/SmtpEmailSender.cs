@@ -30,9 +30,10 @@ public class SmtpEmailSender : IEmailSender
         var client = new SmtpClient(_host, _port)
         {
             Credentials = new NetworkCredential(_userName, _password),
-            EnableSsl = _enableSSL
+            EnableSsl = _enableSSL,
+            DeliveryMethod = SmtpDeliveryMethod.Network
         };
-
+        
         var mailMessage = new MailMessage
         {
             From = new MailAddress(_userName),

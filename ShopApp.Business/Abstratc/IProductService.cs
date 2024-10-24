@@ -18,8 +18,11 @@ namespace ShopApp.Business.Abstratc
         Task<Product> GetById(int id);
         Task<List<Product>> GetAll();
         bool Create(Product entity);
+        Task<Product> CreateAsync(Product entity);
         void Update(Product entity);
+        Task UpdateAsync(Product entityToUpdate,Product entity);
         void Delete(Product entity);
+        Task DeleteAsync(Product entity);
         int GetCountByCategory(string category);
         bool Update(Product entity, int[] categoryIds);
     }
